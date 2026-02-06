@@ -1,90 +1,97 @@
 package it.ionut.quiznapoli.ui
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.*
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import it.ionut.quiznapoli.data.Difficulty
-import it.ionut.quiznapoli.ui.theme.NapoliAzure
-import it.ionut.quiznapoli.ui.theme.NapoliBlue
 
 @Composable
 fun HomeScreen(
     highScore: Int,
     onStart: (Difficulty) -> Unit
 ) {
-    // Sfondo sfumato Premium
-    val gradient = Brush.verticalGradient(
-        colors = listOf(NapoliBlue, NapoliAzure)
-    )
+    Box(Modifier.fillMaxSize()) {
+        NapoliPremiumBackground()
 
-    Box(modifier = Modifier.fillMaxSize().background(gradient)) {
         Column(
-            modifier = Modifier.padding(24.dp).fillMaxSize(),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(22.dp),
+            verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            // Badge Record
-            Card(
-                colors = CardDefaults.cardColors(containerColor = Color.White.copy(alpha = 0.2f)),
-                shape = RoundedCornerShape(50)
+            Spacer(Modifier.height(4.dp))
+
+            // HERO
+            Column(
+                horizontalAlignment = Alignment.Start
             ) {
-                Text(
-                    text = "🏆 RECORD: $highScore",
-                    color = Color.White,
-                    fontWeight = FontWeight.Bold,
-                    modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
-                )
-            }
+                GlassCard(modifier = Modifier.fillMaxWidth()) {
+                    Text(
+                        text = "QUIZ SSC NAPOLI",
+                        style = MaterialTheme.typography.headlineMedium,
+                        fontWeight = FontWeight.Black,
+                        color = Color.White
+                    )
+                    Spacer(Modifier.height(6.dp))
+                    Text(
+                        text = "Storia completa • Record • Leggende • Trofei",
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = Color.White.copy(alpha = 0.82f)
+                    )
 
-            Spacer(Modifier.height(32.dp))
+                    Spacer(Modifier.height(14.dp))
 
-            Text(
-                "QUIZ NAPOLI",
-                style = MaterialTheme.typography.displayMedium.copy(fontWeight = FontWeight.Black),
-                color = Color.White
-            )
-            Text(
-                "Mettiti alla prova, tifoso!",
-                style = MaterialTheme.typography.titleMedium,
-                color = Color.White.copy(alpha = 0.8f)
-            )
-
-            Spacer(Modifier.height(48.dp))
-
-            // Pulsanti
-            Card(
-                colors = CardDefaults.cardColors(containerColor = Color.White),
-                shape = RoundedCornerShape(16.dp),
-                elevation = CardDefaults.cardElevation(8.dp)
-            ) {
-                Column(modifier = Modifier.padding(16.dp)) {
-                    LevelButton("Riscaldamento (Facile)", NapoliAzure) { onStart(Difficulty.EASY) }
-                    Spacer(Modifier.height(12.dp))
-                    LevelButton("Campionato (Medio)", NapoliBlue) { onStart(Difficulty.MEDIUM) }
-                    Spacer(Modifier.height(12.dp))
-                    LevelButton("Champions (Difficile)", Color(0xFF00295A)) { onStart(Difficulty.HARD) }
+                    GlassCard(modifier = Modifier.fillMaxWidth(), corner = 18.dp) {
+                        Text(
+                            text = "🏆 RECORD PERSONALE",
+                            color = Color.White.copy(alpha = 0.78f),
+                            fontWeight = FontWeight.Bold
+                        )
+                        Spacer(Modifier.height(6.dp))
+                        Text(
+                            text = "$highScore",
+                            style = MaterialTheme.typography.displaySmall,
+                            fontWeight = FontWeight.Black,
+                            color = Color.White
+                        )
+                    }
                 }
             }
-        }
-    }
-}
 
-@Composable
-private fun LevelButton(text: String, color: Color, onClick: () -> Unit) {
-    Button(
-        onClick = onClick,
-        modifier = Modifier.fillMaxWidth().height(56.dp),
-        colors = ButtonDefaults.buttonColors(containerColor = color),
-        shape = RoundedCornerShape(12.dp)
-    ) {
-        Text(text, style = MaterialTheme.typography.titleMedium)
+            // CTA
+            GlassCard(modifier = Modifier.fillMaxWidth()) {
+                Text(
+                    text = "Scegli la difficoltà",
+                    color = Color.White.copy(alpha = 0.9f),
+                    fontWeight = FontWeight.Bold
+                )
+                Spacer(Modifier.height(14.dp))
+
+                PremiumGradientButton(
+                    modifier = Modifier.fillMaxWidth(),
+                    onClick = { onStart(Difficulty.EASY) }
+                ) { Text("Riscaldamento • Facile", color = Color.White, fontWeight = FontWeight.Bold) }
+
+                Spacer(Modifier.height(10.dp))
+
+                PremiumGradientButton(
+                    modifier = Modifier.fillMaxWidth(),
+                    onClick = { onStart(Difficulty.MEDIUM) }
+                ) { Text("Campionato • Medio", color = Color.White, fontWeight = FontWeight.Bold) }
+
+                Spacer(Modifier.height(10.dp))
+
+                PremiumGradientButton(
+                    modifier = Modifier.fillMaxWidth(),
+                    onClick = { onStart(Difficulty.HARD) }
+                ) { Text("Champions • Difficile", color = Color.White, fontWeight = FontWeight.Bold) }
+            }
+        }
     }
 }

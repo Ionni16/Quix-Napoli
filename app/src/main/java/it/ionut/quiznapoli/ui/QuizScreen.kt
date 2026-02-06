@@ -11,6 +11,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Lightbulb
+import it.ionut.quiznapoli.ui.ads.AdBanner
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -23,6 +24,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import it.ionut.quiznapoli.data.Question
 import kotlinx.coroutines.delay
+import android.app.Activity
+import androidx.compose.ui.platform.LocalContext
+import it.ionut.quiznapoli.ui.ads.RewardedAdManager
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -47,6 +52,20 @@ fun QuizScreen(
     var timeLeft by remember { mutableIntStateOf(initialTime) }
 
     val q = questions.getOrNull(index) ?: return
+    val context = LocalContext.current
+    val activity = context as? Activity
+
+    val rewarded = remember {
+        RewardedAdManager(
+            context = context,
+            adUnitId = "ca-app-pub-3402722098398750/7122003890" // ✅ TEST rewarded
+        )
+    }
+
+    LaunchedEffect(Unit) {
+        rewarded.preload()
+    }
+
     val scroll = rememberScrollState()
 
     LaunchedEffect(index) {
@@ -103,8 +122,15 @@ fun QuizScreen(
                         }
                     }
                 )
-            }
-        ) { padding ->
+            },
+            bottomBar = {
+                AdBanner(
+                    adUnitId = "ca-app-pub-3402722098398750/3374330571", // ✅ TEST banner
+                    modifier = Modifier.fillMaxWidth()
+                )
+            },
+
+            ) { padding ->
             Column(
                 modifier = Modifier
                     .padding(padding)
@@ -134,19 +160,38 @@ fun QuizScreen(
                         used = fiftyFiftyUsed,
                         enabled = !isAnswered && !fiftyFiftyUsed
                     ) {
-                        fiftyFiftyUsed = true
-                        val wrong = q.answers.indices.filter { it != q.correctIndex }
-                        hiddenAnswers = wrong.shuffled().take(2).toSet()
+                        val act = activity ?: return@PremiumLifelineChip
+
+                        rewarded.show(
+                            activity = act,
+                            onReward = {
+                                fiftyFiftyUsed = true
+                                val wrong = q.answers.indices.filter { it != q.correctIndex }
+                                hiddenAnswers = wrong.shuffled().take(2).toSet()
+                            },
+                            onNoAd = {
+                                // opzionale: mostra un messaggio "Annuncio non disponibile"
+                            }
+                        )
                     }
+
 
                     PremiumLifelineChip(
                         text = "+15s",
                         used = timePlusUsed,
                         enabled = !isAnswered && !timePlusUsed
                     ) {
-                        timePlusUsed = true
-                        timeLeft += 15
+                        val act = activity ?: return@PremiumLifelineChip
+
+                        rewarded.show(
+                            activity = act,
+                            onReward = {
+                                timePlusUsed = true
+                                timeLeft += 15
+                            }
+                        )
                     }
+
                 }
 
                 // Domanda (glass)
@@ -219,7 +264,7 @@ fun QuizScreen(
                     }
                 }
 
-                Spacer(Modifier.height(22.dp))
+                Spacer(Modifier.height(80.dp)) // lascia spazio al banner + gesture bar
             }
         }
     }

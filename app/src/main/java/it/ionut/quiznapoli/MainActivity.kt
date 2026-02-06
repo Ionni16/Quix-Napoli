@@ -15,10 +15,13 @@ import it.ionut.quiznapoli.ui.HomeScreen
 import it.ionut.quiznapoli.ui.QuizScreen
 import it.ionut.quiznapoli.ui.ResultScreen
 import it.ionut.quiznapoli.ui.theme.QuizNapoliTheme
+import com.google.android.gms.ads.MobileAds
+
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        MobileAds.initialize(this)
         setContent {
             QuizNapoliTheme {
                 val nav = rememberNavController()

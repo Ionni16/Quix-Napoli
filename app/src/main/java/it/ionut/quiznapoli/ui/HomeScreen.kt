@@ -10,6 +10,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import it.ionut.quiznapoli.data.Difficulty
+import it.ionut.quiznapoli.ui.ads.AdBanner
+
 
 @Composable
 fun HomeScreen(
@@ -92,6 +94,16 @@ fun HomeScreen(
                     onClick = { onStart(Difficulty.HARD) }
                 ) { Text("Champions • Difficile", color = Color.White, fontWeight = FontWeight.Bold) }
             }
+
+            Spacer(Modifier.height(16.dp))
+
+            AdBanner(
+                adUnitId = "ca-app-pub-3402722098398750/3374330571", // ✅ produzione
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(50.dp)
+            )
+
         }
     }
 }

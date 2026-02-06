@@ -12,6 +12,12 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.QuizNapoli"
         tools:targetApi="31">
+
+        <!-- ✅ AdMob App ID (APPLICATION_ID) -->
+        <meta-data
+            android:name="com.google.android.gms.ads.APPLICATION_ID"
+            android:value="ca-app-pub-3402722098398750~9383634915" />
+
         <activity
             android:name=".MainActivity"
             android:exported="true"
@@ -19,10 +25,10 @@
             android:theme="@style/Theme.QuizNapoli">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
     </application>
 
 </manifest>
